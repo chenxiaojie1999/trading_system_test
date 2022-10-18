@@ -24,6 +24,13 @@ def get_project_path():
 
 
 def sep(path, add_sep_before=False, add_sep_after=False):
+    """
+
+    :param path: 路径列表，类型为数组
+    :param add_sep_before: 是否需要在拼接的路径前加一个分隔符
+    :param add_sep_after: 是否需要在拼接的路径后加一个分隔符
+    :return:
+    """
     all_path = os.sep.join(path)
     if add_sep_before:
         all_path = os.sep + all_path
