@@ -263,6 +263,110 @@ class ObjectMap:
 
         return True
 
+    def element_click(
+            self,
+            driver,
+            locate_type,
+            locator_expression,
+            locate_type_disappear=None,
+            locator_expression_disappear=None,
+            locate_type_appear=None,
+            locator_expression_appear=None,
+            timeout=30
+    ):
+        """
+        元素点击
+        :param driver:浏览器驱动
+        :param locate_type:定位方式类型
+        :param locator_expression:定位表达式
+        :param locate_type_disappear:等待元素消失的定位方式类型
+        :param locator_expression_disappear:等待元素消失的定位表达式
+        :param locate_type_appear:等待元素出现的定位方式类型
+        :param locator_expression_appear:等待元素出现的定位表达式
+        :param timeout:超时时间
+        :return:
+        """
+        # 元素要可见
+        element = self.element_appear(
+            driver=driver,
+            locate_type=locate_type,
+            locator_expression=locator_expression,
+            timeout=timeout
+        )
+        try:
+            # 点击元素
+            element.click()
+        except StaleElementReferenceException:
+            self.wait_for_ready_state_complete(driver=driver)
+            time.sleep(0.06)
+            element = self.element_appear(
+                driver=driver,
+                locate_type=locate_type,
+                locator_expression=locator_expression,
+                timeout=timeout
+            )
+            element.click()
+        except Exception as e:
+            print("页面出现异常，元素不可点击", e)
+            return False
+        try:
+            # 点击元素后的元素出现或消失
+            self.element_appear(
+                driver,
+                locate_type_appear,
+                locator_expression_appear
+            )
+            self.element_disappear(
+                driver,
+                locate_type_disappear,
+                locator_expression_disappear
+            )
+        except Exception as e:
+            print("等待元素消失或出现失败", e)
+            return False
+
+        return True
+
+    def element_to_url(
+            self,
+            driver,
+            url,
+            locate_type_disappear=None,
+            locator_expression_disappear=None,
+            locate_type_appear=None,
+            locator_expression_appear=None
+    ):
+        """
+        跳转地址
+        :param driver: 浏览器驱动
+        :param url: 跳转的地址
+        :param locate_type_disappear: 等待页面元素消失的定位方式
+        :param locator_expression_disappear: 等待页面元素消失的定位表达式
+        :param locate_type_appear: 等待页面元素出现的定位方式
+        :param locator_expression_appear: 等待页面元素出现的定位表达式
+        :return:
+        """
+        try:
+            driver.get(self.url + url)
+            # 等待页面元素都加载完成
+            self.wait_for_ready_state_complete(driver)
+            # 跳转地址后等待元素消失
+            self.element_disappear(
+                driver,
+                locate_type_disappear,
+                locator_expression_disappear
+            )
+            # 跳转地址后等待元素出现
+            self.element_appear(
+                driver,
+                locate_type_appear,
+                locator_expression_appear
+            )
+        except Exception as e:
+            print("跳转地址出现异常，异常原因:%s" % e)
+            return False
+        return True
+
 
 if __name__ == '__main__':
     ObjectMap().element_get()
