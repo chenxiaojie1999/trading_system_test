@@ -4,6 +4,7 @@
 # @FileName   : driver_config.py
 # @Description:
 
+from selenium.webdriver.common.by import By
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -47,3 +48,4 @@ class DriverConfig:
 
 if __name__ == '__main__':
     DriverConfig().driver_config()
+

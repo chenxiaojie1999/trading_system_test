@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Author     : Bonnie
 # @Time       : 2022/10/20 17:01
-# @FileName   : LefMenuBase.py
+# @FileName   : LeftMenuBase.py
 # @Description:
 
 class LeftMenuBase:
